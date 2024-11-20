@@ -9,6 +9,7 @@ namespace BulkyBook.DataAccess.Repository.IRepository
 {
     public interface ICategoryRepository : IRepository<Category>
     {
+        IEnumerable<Category> GetAll();
         void Update(Category obj);
       
     }

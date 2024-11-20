@@ -18,6 +18,11 @@ namespace BulkyBook.DataAccess.Repository
             _db = db;
         }
 
+        public IEnumerable<Category> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(Category obj)
         {
             _db.Categories.Update(obj);
