@@ -20,7 +20,7 @@ namespace BulkyBook.DataAccess.Repository
 
         public IEnumerable<Category> GetAll()
         {
-            throw new NotImplementedException();
+            return _db.Categories;
         }
 
         public void Update(Category obj)
