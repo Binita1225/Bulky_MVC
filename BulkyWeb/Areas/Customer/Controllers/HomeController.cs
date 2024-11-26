@@ -3,6 +3,7 @@ using BulkyBook.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace BulkyBookWeb.Areas.Customer.Controllers
@@ -21,7 +22,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties : "Category");
             return View(productList);
         }
 
