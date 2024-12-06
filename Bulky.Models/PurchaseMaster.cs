@@ -22,5 +22,7 @@ namespace BulkyBook.Models
         public string CustomerAddress { get; set; }
 
         public DateTime TransactionDate { get; set; }
+
+        public ICollection<PurchaseDetail> PurchaseDetails { get; set; }
     }
 }
