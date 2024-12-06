@@ -1,0 +1,27 @@
+﻿@model IEnumerable<History>
+
+
+
+<h2>History</h2>
+<table class="table table-bordered>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Transaction Type</th>
+            <th>Stock Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model)
+        {
+            <tr>
+                <td>@history.Product.Title</td>
+                <td>@history.TransactionType</td>
+                <td>@history.StockCheckOut</td>
+                <td>@history.TransactionDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

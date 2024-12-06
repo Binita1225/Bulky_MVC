@@ -57,7 +57,20 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 detail.MasterId = purchaseVM.PurchaseMaster.Id;
                 detail.Total = detail.Quantity * detail.Rate;
                 _unitOfWork.PurchaseDetail.Add(detail);
+
+                var history = new History
+                {
+                    TransactionType = TransactionType.Purchase,
+                    StockCheckOut = StockCheckOut.In,
+                    ItemId = detail.ItemId,
+                    TransactionDate = DateTime.Now
+                };
+
+                _unitOfWork.History.Add(history);
             }
+
+
+
             _unitOfWork.Save();
 
                 return RedirectToAction("Index");

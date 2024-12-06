@@ -21,6 +21,7 @@ namespace BulkyBook.DataAccess.Repository
         public IOrderDetailRepository OrderDetail { get; private set; }
         public IPurchaseMasterRepository PurchaseMaster { get; private set; }
         public IPurchaseDetailRepository PurchaseDetail { get; private set; }
+        public IHistoryRepository History { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -33,6 +34,7 @@ namespace BulkyBook.DataAccess.Repository
             OrderDetail = new OrderDetailRepository(_db);
             PurchaseMaster = new PurchaseMasterRepository(_db);
             PurchaseDetail = new PurchaseDetailRepository(_db);
+            History = new HistoryRepository(_db);
         }
         
 
