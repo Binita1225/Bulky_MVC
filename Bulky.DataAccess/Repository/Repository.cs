@@ -30,16 +30,16 @@ namespace BulkyBook.DataAccess.Repository
         {
             IQueryable<T> query;
             if (tracked)
-            { 
+            {
                 query = dbSet;
-                
             }
             else
             {
-               query = dbSet.AsNoTracking();
-               
+                query = dbSet.AsNoTracking();
             }
-            query = query.Where(filter);
+
+            query = query.Where(filter); // Apply the filter
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -47,8 +47,10 @@ namespace BulkyBook.DataAccess.Repository
                     query = query.Include(includeProp);
                 }
             }
-            return query.FirstOrDefault();
+
+            return query.FirstOrDefault(); // Return the first matching result
         }
+
 
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
         {
@@ -86,7 +88,7 @@ namespace BulkyBook.DataAccess.Repository
 
         public void Update(T entity)
         {
-            throw new NotImplementedException();
+            dbSet.Update(entity);
         }
     }
 }

@@ -23,6 +23,6 @@ namespace BulkyBook.Models
         public int MasterId {  get; set; }
         [ForeignKey("MasterId")]
         public PurchaseMaster PurchaseMaster { get; set; }
-        public int Total {  get; set; }
+        public int Total { get; set; }
     }
 }

@@ -1,0 +1,66 @@
+﻿@model BulkyBook.Models.ViewModels.PurchaseIndexVM
+
+
+<h3>Customer Information</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Customer Email</th>
+            <th>Customer No</th>
+            <th>Customer Address</th>
+            <th>Transaction Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var purchase in Model.PurchaseMasters)
+        {
+            <tr>
+                <td>@purchase.CustomerName</td>
+                <td>@purchase.CustomerEmail</td>
+                <td>@purchase.CustomerNo</td>
+                <td>@purchase.CustomerAddress</td>
+                <td>@purchase.TransactionDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h3>Purchase Details</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Rate</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model.PurchaseDetail)
+        {
+            <tr>
+                <td>@detail.Product.Title</td>
+                <td>@detail.Quantity</td>
+                <td>@detail.Rate</td>
+                <td>@detail.Total</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<a asp-controller="Purchase" asp-action="Index" class="btn btn-secondary border form-control">
+    Back to List
+</a>
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

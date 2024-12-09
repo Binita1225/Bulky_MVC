@@ -1,0 +1,11 @@
+﻿@model BulkyBook.Models.PurchaseMaster
+
+<h2>Delete Purchase</h2>
+
+<p>Are you sure you want to delete the purchase of <strong>@Model.CustomerName</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-controller="Purchase" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

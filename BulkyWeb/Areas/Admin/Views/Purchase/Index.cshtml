@@ -1,7 +1,10 @@
 ﻿@model BulkyBook.Models.ViewModels.PurchaseIndexVM
 
-<h2>Customer Detail</h2>
+<h2>Customer Details</h2>
 
+<a asp-controller="Purchase" asp-action="Create"  class="btn btn-primary mx-2">
+    Create
+</a>
 <table class="table">
     <thead>
         <tr>
@@ -10,47 +13,33 @@
             <th>Customer No</th>
             <th>Customer Address</th>
             <th>Transaction Date</th>
-            
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-
         @foreach (var purchase in Model.PurchaseMasters)
-{
-    <tr>
-        <td>@purchase.CustomerName</td>
-        <td>@purchase.CustomerEmail</td>
-        <td>@purchase.CustomerNo</td>
-        <td>@purchase.CustomerAddress</td>
-        <td>@purchase.TransactionDate.ToShortDateString()</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<hr />
-
-<h2>Purchase Details</h2>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Rate</th>
-            <th>Total</th>
-            <th>Customer</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var detail in Model.PurchaseDetail)
         {
             <tr>
-                <td>@detail.Product.Title</td>
-                <td>@detail.Quantity</td>
-                <td>@detail.Rate</td>
-                <td>@detail.Total</td>
-                <td>@detail.PurchaseMaster.CustomerName</td>
+                <td>@purchase.CustomerName</td>
+                <td>@purchase.CustomerEmail</td>
+                <td>@purchase.CustomerNo</td>
+                <td>@purchase.CustomerAddress</td>
+                <td>@purchase.TransactionDate.ToShortDateString()</td>
+                <td>
+                    <!-- Action Buttons -->
+                    <a asp-controller="Purchase" asp-action="View" asp-route-id="@purchase.Id" class="btn btn-primary mx-2">
+                         View
+                    </a>
+                    <a asp-controller="Purchase" asp-action="Edit" asp-route-id="@purchase.Id" class="btn btn-primary mx-2">
+                        Edit
+                    </a>
+                    <a asp-controller="Purchase" asp-action="Delete" asp-route-id="@purchase.Id" class="btn btn-primary mx-2">
+                        Delete
+                    </a>
+                   
+                </td>
             </tr>
         }
     </tbody>
 </table>
+

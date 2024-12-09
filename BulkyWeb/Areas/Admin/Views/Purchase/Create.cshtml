@@ -6,26 +6,38 @@
 <h2>Create Purchase</h2>
 
 <form asp-action="Create" method="post">
-    <div>
-        <label>Name</label>
-        <input asp-for="PurchaseMaster.CustomerName" class="form-control"/>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="PurchaseMaster.CustomerName"></label>
+        <input asp-for="PurchaseMaster.CustomerName" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerName" class="text-danger"></span>
     </div>
-    <div>
-        <label>Email</label>
+
+    <div class="form-group">
+        <label asp-for="PurchaseMaster.CustomerEmail"></label>
         <input asp-for="PurchaseMaster.CustomerEmail" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerEmail" class="text-danger"></span>
     </div>
-    <div>
-        <label>Phone Number</label>
+
+    <div class="form-group">
+        <label asp-for="PurchaseMaster.CustomerNo"></label>
         <input asp-for="PurchaseMaster.CustomerNo" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerNo" class="text-danger"></span>
     </div>
-    <div>
-        <label>Address</label>
+
+    <div class="form-group">
+        <label asp-for="PurchaseMaster.CustomerAddress"></label>
         <input asp-for="PurchaseMaster.CustomerAddress" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerAddress" class="text-danger"></span>
     </div>
-    <div>
-        <label>Date</label>
-        <input asp-for="PurchaseMaster.TransactionDate" class="form-control" />
+
+    <div class="form-group">
+        <label asp-for="PurchaseMaster.TransactionDate"></label>
+        <input asp-for="PurchaseMaster.TransactionDate" class="form-control" type="date" />
+        <span asp-validation-for="PurchaseMaster.TransactionDate" class="text-danger"></span>
     </div>
+
 
     <hr />
 
@@ -43,14 +55,22 @@
         <tbody id="details-body">
             <tr>
                 <td>
-                    
-                    <select asp-for="PurchaseDetail[0].ItemId" asp-items="Model.Products" class="form-control product-dropdown">
+                    <select asp-for="PurchaseDetail[0].ItemId" class="form-control product-dropdown">
                         <option value="" selected>Select</option>
-                        @foreach (var product in Model.Products)
+                        @if (Model.Products != null && Model.Products.Any())
                         {
-                            <option value="@product.Value" data-rate="@product.Group.Name">@product.Text</option>
+                            @foreach (var product in Model.Products)
+                            {
+                                <option value="@product.Value" data-rate="@product.Group.Name">@product.Text</option>
+                            }
+                        }
+                        else
+                        {
+                            <option disabled>No products available</option>
                         }
                     </select>
+
+
                 </td>
                 <td>
                     <input type="text" class="form-control rate" asp-for="PurchaseDetail[0].Rate" readonly />
@@ -74,7 +94,11 @@
     <hr />
     <div>
         <button type="submit" class="btn btn-success">Submit</button>
+        <a asp-controller="Purchase" asp-action="Index" class="btn">
+            Back to List
+        </a>
     </div>
+   
 </form>
 
 
@@ -100,10 +124,11 @@
             });
 
             $(document).on("change", ".product-dropdown", function () {
-                let rate = $(this).find(":selected").data("rate");
-                $(this).closest("tr").find(".rate").val(rate);
-                $(this).closest("tr").find(".total").val("");
+                // Get the rate from the selected product
+                var rate = $(this).find(":selected").data("rate");
+                $(this).closest("tr").find(".rate").val(rate); // Set the rate in the input field
             });
+          
 
             $(document).on("input", ".quantity", function () {
                 let quantity = parseFloat($(this).val()) || 0;

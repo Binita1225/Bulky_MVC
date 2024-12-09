@@ -11,15 +11,20 @@ namespace BulkyBook.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Customer name is required")]
         public string CustomerName { get; set; }
 
+        [Required(ErrorMessage = "Customer email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string CustomerEmail { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Customer phone number is required")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits")]
         public string CustomerNo { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Customer address is required")]
         public string CustomerAddress { get; set; }
+        [Required(ErrorMessage = "Transaction date is required")]
+        [DataType(DataType.Date)]
 
         public DateTime TransactionDate { get; set; }
 

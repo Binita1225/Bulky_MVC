@@ -1,0 +1,70 @@
+﻿@model BulkyBook.Models.ViewModels.PurchaseVM
+<h2>Edit Purchase</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="PurchaseMaster.Id" />
+
+    <div>
+        <label>Name</label>
+        <input asp-for="PurchaseMaster.CustomerName" class="form-control" />
+    </div>
+    <div>
+        <label>Email</label>
+        <input asp-for="PurchaseMaster.CustomerEmail" class="form-control" />
+    </div>
+    <div>
+        <label>Phone Number</label>
+        <input asp-for="PurchaseMaster.CustomerNo" class="form-control" />
+    </div>
+    <div>
+        <label>Address</label>
+        <input asp-for="PurchaseMaster.CustomerAddress" class="form-control" />
+    </div>
+    <div>
+        <label>Date</label>
+        <input asp-for="PurchaseMaster.TransactionDate" class="form-control" />
+    </div>
+
+    <h4>Purchase Details</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Rate</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.PurchaseDetail.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <select asp-for="PurchaseDetail[i].ItemId" class="form-control">
+                            @foreach (var product in Model.Products)
+                            {
+                                bool isSelected = product.Value == Model.PurchaseDetail[i].ItemId.ToString();
+                                <option value="@product.Value" selected="@(isSelected ? "selected" : null)">
+                                    @product.Text
+                                </option>
+                            }
+                        </select>
+
+                    </td>
+                    <td>
+                        <input asp-for="PurchaseDetail[i].Rate" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="PurchaseDetail[i].Quantity" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="PurchaseDetail[i].Total" class="form-control" readonly />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-controller="Purchase" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
