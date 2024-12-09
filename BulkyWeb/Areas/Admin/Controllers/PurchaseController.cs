@@ -42,7 +42,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
             if (purchaseMaster == null)
             {
-                return NotFound(); // Return a 404 if no purchase master is found
+                return NotFound(); // Return a not found error if no purchase master is found
             }
 
             // Create the ViewModel to display purchase details
@@ -128,7 +128,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+     //   [ValidateAntiForgeryToken]
         public IActionResult Edit(PurchaseVM purchaseVM)
         {
             var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == purchaseVM.PurchaseMaster.Id);
@@ -167,38 +167,38 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
 
         public IActionResult Delete(int id)
-{
-    var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == id, includeProperties: "PurchaseDetails");
-    if (purchaseMaster == null)
-    {
-        return NotFound();
-    }
+        {
+            var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == id, includeProperties: "PurchaseDetails");
+            if (purchaseMaster == null)
+            {
+                return NotFound();
+            }
 
-    return View(purchaseMaster);
-}
+            return View(purchaseMaster);
+        }
 
-[HttpPost, ActionName("Delete")]
-[ValidateAntiForgeryToken]
-public IActionResult DeleteConfirmed(int id)
-{
-    var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == id, includeProperties: "PurchaseDetails");
-    if (purchaseMaster == null)
-    {
-        return NotFound();
-    }
+        [HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == id, includeProperties: "PurchaseDetails");
+            if (purchaseMaster == null)
+            {
+                return NotFound();
+            }
 
-    // Remove associated details
-    foreach (var detail in purchaseMaster.PurchaseDetails)
-    {
-        _unitOfWork.PurchaseDetail.Remove(detail);
-    }
+            // Remove associated details
+            foreach (var detail in purchaseMaster.PurchaseDetails)
+            {
+                _unitOfWork.PurchaseDetail.Remove(detail);
+            }
 
-    // Remove master
-    _unitOfWork.PurchaseMaster.Remove(purchaseMaster);
-    _unitOfWork.Save();
+            // Remove master
+             _unitOfWork.PurchaseMaster.Remove(purchaseMaster);
+             _unitOfWork.Save();
 
-    return RedirectToAction("Index");
-}
+             return RedirectToAction("Index");
+        }
 
 
     }

@@ -7,18 +7,22 @@
     <div>
         <label>Name</label>
         <input asp-for="PurchaseMaster.CustomerName" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerName" class="text-danger"></span>
     </div>
     <div>
         <label>Email</label>
         <input asp-for="PurchaseMaster.CustomerEmail" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerEmail" class="text-danger"></span>
     </div>
     <div>
         <label>Phone Number</label>
         <input asp-for="PurchaseMaster.CustomerNo" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerNo" class="text-danger"></span>
     </div>
     <div>
         <label>Address</label>
         <input asp-for="PurchaseMaster.CustomerAddress" class="form-control" />
+        <span asp-validation-for="PurchaseMaster.CustomerAddress" class="text-danger"></span>
     </div>
     <div>
         <label>Date</label>
@@ -68,3 +72,10 @@
     <button type="submit" class="btn btn-success">Save</button>
     <a asp-controller="Purchase" asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
