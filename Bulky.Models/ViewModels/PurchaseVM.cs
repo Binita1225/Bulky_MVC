@@ -13,5 +13,7 @@ namespace BulkyBook.Models.ViewModels
         public List<PurchaseDetail> PurchaseDetail { get; set; } = new List<PurchaseDetail>();
 
         public IEnumerable<SelectListItem> Products { get; set; }
+
+
     }
 }

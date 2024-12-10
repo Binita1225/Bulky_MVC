@@ -103,7 +103,6 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-
         public IActionResult Edit(int id)
         {
             var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(
@@ -113,25 +112,39 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            var products = _unitOfWork.Product.GetAll();
+
             var purchaseVM = new PurchaseVM
             {
                 PurchaseMaster = purchaseMaster,
                 PurchaseDetail = purchaseMaster.PurchaseDetails.ToList(),
-                Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem
+                Products = products.Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
                     Text = p.Title,
-                    Group = new SelectListGroup { Name = p.ListPrice.ToString() }
+                    // Set data-rate to ListPrice in the SelectListItem Text or Group
+                    // We pass rate as a data-attribute directly in the view.
                 }).ToList()
             };
+
+
 
             return View(purchaseVM);
         }
 
-
         [HttpPost]
         public IActionResult Edit(PurchaseVM purchaseVM)
         {
+            if (!ModelState.IsValid)
+            {
+                purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem
+                {
+                    Value = p.Id.ToString(),
+                    Text = p.Title
+                }).ToList();
+                return View(purchaseVM);
+            }
+
             var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == purchaseVM.PurchaseMaster.Id);
             if (purchaseMaster == null)
             {
@@ -141,31 +154,33 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             // Update PurchaseMaster
             purchaseMaster.CustomerName = purchaseVM.PurchaseMaster.CustomerName;
             purchaseMaster.CustomerEmail = purchaseVM.PurchaseMaster.CustomerEmail;
-            purchaseMaster.CustomerNo = purchaseVM.PurchaseMaster.CustomerNo;
-            purchaseMaster.CustomerAddress = purchaseVM.PurchaseMaster.CustomerAddress;
             purchaseMaster.TransactionDate = purchaseVM.PurchaseMaster.TransactionDate;
 
             _unitOfWork.PurchaseMaster.Update(purchaseMaster);
 
-            // Remove existing details
+            // Remove existing details and validate new ones
             var existingDetails = _unitOfWork.PurchaseDetail.GetAll(d => d.MasterId == purchaseMaster.Id);
             foreach (var detail in existingDetails)
             {
                 _unitOfWork.PurchaseDetail.Remove(detail);
             }
 
-            // Add new details
+            // Add new PurchaseDetail items
             foreach (var detail in purchaseVM.PurchaseDetail)
             {
-                detail.MasterId = purchaseMaster.Id;
-                detail.Total = detail.Quantity * detail.Rate;
-                _unitOfWork.PurchaseDetail.Add(detail);
+                if (detail.ItemId > 0 && detail.Quantity > 0 && detail.Rate > 0)
+                {
+                    detail.MasterId = purchaseMaster.Id;
+                    detail.Total = detail.Quantity * detail.Rate;
+                    _unitOfWork.PurchaseDetail.Add(detail);
+                }
             }
 
             _unitOfWork.Save();
 
             return RedirectToAction("Index");
         }
+
 
 
         public IActionResult Delete(int id)
