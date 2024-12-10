@@ -122,6 +122,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 {
                     Value = p.Id.ToString(),
                     Text = p.Title,
+                    Group = new SelectListGroup { Name = p.ListPrice.ToString() }
                     // Set data-rate to ListPrice in the SelectListItem Text or Group
                     // We pass rate as a data-attribute directly in the view.
                 }).ToList()
@@ -135,15 +136,15 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(PurchaseVM purchaseVM)
         {
-            if (!ModelState.IsValid)
-            {
-                purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem
-                {
-                    Value = p.Id.ToString(),
-                    Text = p.Title
-                }).ToList();
-                return View(purchaseVM);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem
+            //    {
+            //        Value = p.Id.ToString(),
+            //        Text = p.Title
+            //    }).ToList();
+            //    return View(purchaseVM);
+            //}
 
             var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == purchaseVM.PurchaseMaster.Id);
             if (purchaseMaster == null)

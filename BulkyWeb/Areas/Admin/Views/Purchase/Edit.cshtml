@@ -51,7 +51,7 @@
     @foreach (var product in Model.Products)
     {
         <option value="@product.Value" 
-                data-rate="@Model.Products.FirstOrDefault(p => p.Value == product.Value)?.Value">@product.Text</option>
+                data-rate="@product.Group.Name">@product.Text</option>
     }
 </select>
 
