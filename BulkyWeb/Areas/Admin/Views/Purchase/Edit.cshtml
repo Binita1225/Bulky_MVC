@@ -26,7 +26,7 @@
     </div>
     <div>
         <label>Date</label>
-        <input asp-for="PurchaseMaster.TransactionDate" class="form-control" />
+        <input asp-for="PurchaseMaster.TransactionDate" class="form-control" type="date"/>
     </div>
 
     <h4>Purchase Details</h4>
@@ -37,45 +37,96 @@
                 <th>Rate</th>
                 <th>Quantity</th>
                 <th>Total</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="details-body">
             @for (int i = 0; i < Model.PurchaseDetail.Count; i++)
-            {
-                <tr>
-                    <td>
-                        <select asp-for="PurchaseDetail[i].ItemId" class="form-control">
-                            @foreach (var product in Model.Products)
-                            {
-                                bool isSelected = product.Value == Model.PurchaseDetail[i].ItemId.ToString();
-                                <option value="@product.Value" selected="@(isSelected ? "selected" : null)">
-                                    @product.Text
-                                </option>
-                            }
-                        </select>
+{
+    <tr>
+        <td>
+            <select name="PurchaseDetail[@i].ItemId" class="form-control product-dropdown">
+                <option value="" selected>Select</option>
+                @if (Model.Products != null && Model.Products.Any())
+                {
+                    @foreach (var product in Model.Products)
+                    {
+                        <option value="@product.Value" @(product.Value == Model.PurchaseDetail[i].ItemId.ToString() ? "selected" : "")>
+                            @product.Text
+                        </option>
+                    }
+                }
+                else
+                {
+                    <option disabled>No products available</option>
+                }
+            </select>
+        </td>
+        <td>
+            <input type="text" class="form-control rate" name="PurchaseDetail[@i].Rate" value="@Model.PurchaseDetail[i].Rate" readonly />
+        </td>
+        <td>
+            <input type="number" class="form-control quantity" name="PurchaseDetail[@i].Quantity" value="@Model.PurchaseDetail[i].Quantity" />
+        </td>
+        <td>
+            <input type="text" class="form-control total" name="PurchaseDetail[@i].Total" value="@Model.PurchaseDetail[i].Total" readonly />
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger remove-row">Remove</button>
+        </td>
+    </tr>
+}
 
-                    </td>
-                    <td>
-                        <input asp-for="PurchaseDetail[i].Rate" class="form-control" />
-                    </td>
-                    <td>
-                        <input asp-for="PurchaseDetail[i].Quantity" class="form-control" />
-                    </td>
-                    <td>
-                        <input asp-for="PurchaseDetail[i].Total" class="form-control" readonly />
-                    </td>
-                </tr>
-            }
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-controller="Purchase" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <button type="button" class="btn btn-primary" id="add-row">Add Row</button>
+    <hr />
+    <div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a asp-controller="Purchase" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
 </form>
-
 
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+
+    <script>
+        $(document).ready(function () {
+            let rowCount = @Model.PurchaseDetail.Count;
+
+            // Add row functionality
+            $("#add-row").click(function () {
+                let row = $("#details-body tr:first").clone();
+                row.find("input, select").val(""); // Clear the values
+                row.find("select").attr("name", `PurchaseDetail[${rowCount}].ItemId`);
+                row.find(".rate").attr("name", `PurchaseDetail[${rowCount}].Rate`);
+                row.find(".quantity").attr("name", `PurchaseDetail[${rowCount}].Quantity`);
+                row.find(".total").attr("name", `PurchaseDetail[${rowCount}].Total`);
+                $("#details-body").append(row);
+                rowCount++;
+            });
+
+            // Remove row functionality
+            $(document).on("click", ".remove-row", function () {
+                $(this).closest("tr").remove();
+            });
+
+            // Fetch rate when product is selected
+            $(document).on("change", ".product-dropdown", function () {
+                var rate = $(this).find(":selected").data("rate");
+                $(this).closest("tr").find(".rate").val(rate); // Set rate in the input field
+            });
+
+            // Calculate total when quantity changes
+            $(document).on("input", ".quantity", function () {
+                let quantity = parseFloat($(this).val()) || 0;
+                let rate = parseFloat($(this).closest("tr").find(".rate").val()) || 0;
+                let total = quantity * rate;
+                $(this).closest("tr").find(".total").val(total);
+            });
+        });
+    </script>
 }

@@ -120,15 +120,16 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
-                    Text = p.Title
+                    Text = p.Title,
+                    Group = new SelectListGroup { Name = p.ListPrice.ToString() }
                 }).ToList()
             };
 
             return View(purchaseVM);
         }
 
+
         [HttpPost]
-     //   [ValidateAntiForgeryToken]
         public IActionResult Edit(PurchaseVM purchaseVM)
         {
             var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == purchaseVM.PurchaseMaster.Id);
@@ -146,13 +147,14 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
             _unitOfWork.PurchaseMaster.Update(purchaseMaster);
 
-            // Remove existing details and add updated ones
+            // Remove existing details
             var existingDetails = _unitOfWork.PurchaseDetail.GetAll(d => d.MasterId == purchaseMaster.Id);
             foreach (var detail in existingDetails)
             {
                 _unitOfWork.PurchaseDetail.Remove(detail);
             }
 
+            // Add new details
             foreach (var detail in purchaseVM.PurchaseDetail)
             {
                 detail.MasterId = purchaseMaster.Id;
