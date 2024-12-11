@@ -3,6 +3,8 @@ using BulkyBook.Models;
 using BulkyBook.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace BulkyBookWeb.Areas.Admin.Controllers
@@ -62,13 +64,16 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 PurchaseMaster = new PurchaseMaster { TransactionDate = DateTime.Now },
                 PurchaseDetail = new List<PurchaseDetail> { new PurchaseDetail() },
-                Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem
+                Products = _unitOfWork.Product.GetAll().Select(p => new PurchaseProductVM
                 {
-                    Value = p.Id.ToString(),
-                    Text = p.Title,
-                    Group = new SelectListGroup { Name = p.ListPrice.ToString() }
+                    Id = p.Id,
+                    Name = p.Title,
+                    Rate = p.ListPrice, 
+                    Stock = p.Stock1
                 }).ToList()
             };
+
+         
 
             return View(viewModel);
         }
@@ -79,9 +84,23 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             // Add PurchaseMaster
             _unitOfWork.PurchaseMaster.Add(purchaseVM.PurchaseMaster);
             _unitOfWork.Save();
-
+            purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new PurchaseProductVM
+            {
+                Id = p.Id,
+                Name = p.Title,
+                Rate = p.ListPrice,
+                Stock = p.Stock1
+            }).ToList();
             foreach (var detail in purchaseVM.PurchaseDetail)
             {
+                //to validate stock
+                var product = _unitOfWork.Product.Get(x => x.Id == detail.ItemId);
+                
+                if (product.Stock1 < detail.Quantity)
+                {
+                    return View(purchaseVM);
+                }
+
                 detail.MasterId = purchaseVM.PurchaseMaster.Id;
                 detail.Total = detail.Quantity * detail.Rate;
 
@@ -94,6 +113,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     ItemId = detail.ItemId,
                     TransactionDate = DateTime.Now
                 };
+
+
 
                 _unitOfWork.History.Add(history);
             }
@@ -118,11 +139,12 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 PurchaseMaster = purchaseMaster,
                 PurchaseDetail = purchaseMaster.PurchaseDetails.ToList(),
-                Products = products.Select(p => new SelectListItem
+                Products = products.Select(p => new PurchaseProductVM
                 {
-                    Value = p.Id.ToString(),
-                    Text = p.Title,
-                    Group = new SelectListGroup { Name = p.ListPrice.ToString() }
+                    Id = p.Id,
+                    Name = p.Title,
+                    Rate = p.ListPrice,
+                    Stock = p.Stock1
                     // Set data-rate to ListPrice in the SelectListItem Text or Group
                     // We pass rate as a data-attribute directly in the view.
                 }).ToList()
@@ -136,6 +158,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(PurchaseVM purchaseVM)
         {
+
+            // if there is null this section of code will not work
             //if (!ModelState.IsValid)
             //{
             //    purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new SelectListItem

@@ -6,7 +6,7 @@
 <h2>Create Purchase</h2>
 
 <form asp-action="Create" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+    
 
     <div class="form-group">
         <label asp-for="PurchaseMaster.CustomerName"></label>
@@ -46,6 +46,7 @@
         <thead>
             <tr>
                 <th>Product</th>
+                <th>Stock</th>
                 <th>Rate</th>
                 <th>Quantity</th>
                 <th>Total</th>
@@ -61,7 +62,7 @@
                         {
                             @foreach (var product in Model.Products)
                             {
-                                <option value="@product.Value" data-rate="@product.Group.Name">@product.Text</option>
+                                <option value="@product.Id" data-rate="@product.Rate" data-stock="@product.Stock">@product.Name</option>
                             }
                         }
                         else
@@ -72,6 +73,11 @@
 
 
                 </td>
+                <td>
+                    <input type="text" class="form-control stock" asp-for="PurchaseDetail[0].Product.Stock1" readonly />
+
+                </td>
+
                 <td>
                     <input type="text" class="form-control rate" asp-for="PurchaseDetail[0].Rate" readonly />
 
@@ -132,9 +138,12 @@
                 // Get the rate from the selected product
                 var rate = $(this).find(":selected").data("rate");
                 $(this).closest("tr").find(".rate").val(rate); // Set the rate in the input field
+                var stock = $(this).find(":selected").data("stock");
+                $(this).closest("tr").find(".stock").val(stock);
 
             });
           
+
 
             $(document).on("input", ".quantity", function () {
                 let quantity = parseFloat($(this).val()) || 0;

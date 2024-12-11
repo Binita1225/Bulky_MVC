@@ -48,6 +48,10 @@ namespace BulkyBook.Models
         public Category Category { get; set; }
         [ValidateNever]
         public string ImageUrl { get; set; }
+
+        [Required]
+
+        public int Stock1 {  get; set; }
        
     }
 }

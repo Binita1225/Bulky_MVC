@@ -4,6 +4,7 @@ using BulkyBook.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BulkyBook.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241211064432_addStock1ToProduct1212")]
+    partial class addStock1ToProduct1212
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,7 +301,7 @@ namespace BulkyBook.DataAccess.Migrations
                     b.Property<double>("Price50")
                         .HasColumnType("float");
 
-                    b.Property<int>("Stock1")
+                    b.Property<int>("Stock")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -324,7 +327,7 @@ namespace BulkyBook.DataAccess.Migrations
                             Price = 90.0,
                             Price100 = 80.0,
                             Price50 = 85.0,
-                            Stock1 = 0,
+                            Stock = 0,
                             Title = "Fortune of Time"
                         },
                         new
@@ -339,7 +342,7 @@ namespace BulkyBook.DataAccess.Migrations
                             Price = 30.0,
                             Price100 = 20.0,
                             Price50 = 25.0,
-                            Stock1 = 0,
+                            Stock = 0,
                             Title = "Dark Skies"
                         },
                         new
@@ -354,7 +357,7 @@ namespace BulkyBook.DataAccess.Migrations
                             Price = 50.0,
                             Price100 = 35.0,
                             Price50 = 40.0,
-                            Stock1 = 0,
+                            Stock = 0,
                             Title = "Vanish in the Sunset"
                         },
                         new
@@ -369,7 +372,7 @@ namespace BulkyBook.DataAccess.Migrations
                             Price = 65.0,
                             Price100 = 55.0,
                             Price50 = 60.0,
-                            Stock1 = 0,
+                            Stock = 0,
                             Title = "Cotton Candy"
                         },
                         new
@@ -384,7 +387,7 @@ namespace BulkyBook.DataAccess.Migrations
                             Price = 27.0,
                             Price100 = 20.0,
                             Price50 = 25.0,
-                            Stock1 = 0,
+                            Stock = 0,
                             Title = "Rock in the Ocean"
                         },
                         new
@@ -399,7 +402,7 @@ namespace BulkyBook.DataAccess.Migrations
                             Price = 23.0,
                             Price100 = 20.0,
                             Price50 = 22.0,
-                            Stock1 = 0,
+                            Stock = 0,
                             Title = "Leaves and Wonders"
                         });
                 });
@@ -416,9 +419,6 @@ namespace BulkyBook.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("MasterId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductStock")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")

@@ -33,8 +33,10 @@
     <thead>
         <tr>
             <th>Product</th>
-            <th>Quantity</th>
+            <th>Stock</th>
+           
             <th>Rate</th>
+            <th>Quantity</th>
             <th>Total</th>
         </tr>
     </thead>
@@ -43,8 +45,10 @@
         {
             <tr>
                 <td>@detail.Product.Title</td>
-                <td>@detail.Quantity</td>
+                <td>@detail.Product.Stock1</td>
+                
                 <td>@detail.Rate</td>
+                <td>@detail.Quantity</td>
                 <td>@detail.Total</td>
             </tr>
         }

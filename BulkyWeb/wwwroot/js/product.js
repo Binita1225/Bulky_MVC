@@ -1,8 +1,18 @@
-﻿var dataTable;
-$(document).ready(function () {
-    loadDataTable();
-});
+﻿
 
+
+
+var dataTable;
+//$(document).ready(function () {
+  //  loadDataTable();
+//});
+
+$(document).ready(function () {
+    $("#tblData").dataTable({
+        "bJQueryUI": true,
+        "aoColumns": [{ "bSortable": true }, { "bSortable": true }]
+    });
+});
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url :'/admin/product/getall'},

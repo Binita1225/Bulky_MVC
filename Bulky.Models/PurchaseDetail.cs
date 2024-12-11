@@ -20,6 +20,7 @@ namespace BulkyBook.Models
         [Required]
         [Range(1, 1000)]
         public int Rate { get; set; }                           
+        //public int Stock { get; set; }                           
         public int MasterId {  get; set; }
         [ForeignKey("MasterId")]
         public PurchaseMaster PurchaseMaster { get; set; }
