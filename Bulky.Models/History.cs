@@ -28,7 +28,7 @@ namespace BulkyBook.Models
         public StockCheckOut StockCheckOut { get; set; }
         public int ItemId { get; set; }
         [ForeignKey("ItemId")]
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
         public DateTime TransactionDate { get; set; }
     }
 }

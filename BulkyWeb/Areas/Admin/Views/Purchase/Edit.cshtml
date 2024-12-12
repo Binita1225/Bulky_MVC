@@ -48,23 +48,24 @@
                 <tr>
                     <td>
                      <select asp-for="PurchaseDetail[@i].ItemId" class="form-control product-dropdown">
-    <option value="">Select Product</option>
-    @foreach (var product in Model.Products)
-    {
-        <option value="@product.Id"
-                                        data-rate="@product.Rate" data-stock="@product.Stock">@product.Name</option>
-    }
-</select>
+                        <option value="">Select Product</option>
+                            @foreach (var product in Model.Products)
+                            {
+                                <option value="@product.Id" data-rate="@product.Rate" data-stock="@product.Stock">
+                                    @product.Name
+                                </option>
+                            }
+                       </select>
 
 
                     </td>
                     <td>
-                        <input type="text" class="form-control stock" asp-for="PurchaseDetail[0].Product.Stock1" readonly />
+                        <input class="form-control stock" asp-for="PurchaseDetail[0].Stock" readonly />
                     </td>
                     <td>
-    <input asp-for="PurchaseDetail[@i].Rate" class="form-control rate" readonly />
-</td>
-<td>
+                        <input asp-for="PurchaseDetail[@i].Rate" class="form-control rate" readonly />
+                    </td>
+                    <td>
     <input asp-for="PurchaseDetail[@i].Quantity" class="form-control quantity" />
 </td>
 <td>

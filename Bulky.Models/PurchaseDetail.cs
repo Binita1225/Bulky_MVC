@@ -14,13 +14,13 @@ namespace BulkyBook.Models
         public int Id { get; set; }
         public int ItemId {  get; set; }
         [ForeignKey("ItemId")]
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]
         [Range(1, 1000)]
         public int Rate { get; set; }                           
-        //public int Stock { get; set; }                           
+        public int Stock { get; set; }                           
         public int MasterId {  get; set; }
         [ForeignKey("MasterId")]
         public PurchaseMaster PurchaseMaster { get; set; }

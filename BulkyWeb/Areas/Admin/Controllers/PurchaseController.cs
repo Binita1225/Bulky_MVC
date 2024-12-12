@@ -84,6 +84,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             // Add PurchaseMaster
             _unitOfWork.PurchaseMaster.Add(purchaseVM.PurchaseMaster);
             _unitOfWork.Save();
+
+            // to fill the product if not product displays null
             purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new PurchaseProductVM
             {
                 Id = p.Id,
@@ -98,6 +100,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 
                 if (product.Stock1 < detail.Quantity)
                 {
+                    ModelState.AddModelError("", "Invalid product or insufficient stock.");
                     return View(purchaseVM);
                 }
 
@@ -170,6 +173,15 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             //    return View(purchaseVM);
             //}
 
+            // to fill the product if not product displays null
+            purchaseVM.Products = _unitOfWork.Product.GetAll().Select(p => new PurchaseProductVM
+            {
+                Id = p.Id,
+                Name = p.Title,
+                Rate = p.ListPrice,
+                Stock = p.Stock1
+            }).ToList();
+
             var purchaseMaster = _unitOfWork.PurchaseMaster.GetFirstOrDefault(p => p.Id == purchaseVM.PurchaseMaster.Id);
             if (purchaseMaster == null)
             {
@@ -193,6 +205,14 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             // Add new PurchaseDetail items
             foreach (var detail in purchaseVM.PurchaseDetail)
             {
+                var product = _unitOfWork.Product.Get(x => x.Id == detail.ItemId);
+
+                if (product.Stock1 < detail.Quantity)
+                {
+                    ModelState.AddModelError("", "Invalid product or insufficient stock.");
+                    return View(purchaseVM);
+                }
+
                 if (detail.ItemId > 0 && detail.Quantity > 0 && detail.Rate > 0)
                 {
                     detail.MasterId = purchaseMaster.Id;

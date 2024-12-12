@@ -58,28 +58,23 @@
                 <td>
                     <select asp-for="PurchaseDetail[0].ItemId" class="form-control product-dropdown">
                         <option value="" selected>Select</option>
-                        @if (Model.Products != null && Model.Products.Any())
+                        @foreach (var product in Model.Products)
                         {
-                            @foreach (var product in Model.Products)
-                            {
-                                <option value="@product.Id" data-rate="@product.Rate" data-stock="@product.Stock">@product.Name</option>
-                            }
-                        }
-                        else
-                        {
-                            <option disabled>No products available</option>
+                            <option value="@product.Id" data-rate="@product.Rate" data-stock="@product.Stock">
+                                @product.Name
+                            </option>
                         }
                     </select>
 
 
                 </td>
                 <td>
-                    <input type="text" class="form-control stock" asp-for="PurchaseDetail[0].Product.Stock1" readonly />
+                    <input type="text" class="form-control stock" asp-for="PurchaseDetail[0].Stock" readonly  />
 
                 </td>
 
                 <td>
-                    <input type="text" class="form-control rate" asp-for="PurchaseDetail[0].Rate" readonly />
+                    <input type="text" class="form-control rate" asp-for="PurchaseDetail[0].Rate" readonly  />
 
                 </td>
                 

@@ -268,7 +268,6 @@ namespace BulkyBook.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Author")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CategoryId")
@@ -418,13 +417,13 @@ namespace BulkyBook.DataAccess.Migrations
                     b.Property<int>("MasterId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductStock")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("Rate")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stock")
                         .HasColumnType("int");
 
                     b.Property<int>("Total")

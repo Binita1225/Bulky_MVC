@@ -10,7 +10,7 @@ namespace BulkyBook.Models.ViewModels
     public class PurchaseVM
     {
         public PurchaseMaster PurchaseMaster { get; set; }      
-        public List<PurchaseDetail> PurchaseDetail { get; set; } = new List<PurchaseDetail>();
+        public List<PurchaseDetail> PurchaseDetail { get; set; }
 
         public List<PurchaseProductVM> Products { get; set; }
 

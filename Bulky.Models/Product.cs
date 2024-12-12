@@ -19,8 +19,8 @@ namespace BulkyBook.Models
         public string Description { get; set; }
         [Required]
         public string ISBN { get; set; }
-        [Required]
-        public string Author { get; set; }
+        
+        public string? Author { get; set; }
 
         [Required]
         [Display(Name = "List price")]
