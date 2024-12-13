@@ -104,6 +104,10 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     return View(purchaseVM);
                 }
 
+                // Reduce stock
+                product.Stock1 -= detail.Quantity;
+                _unitOfWork.Product.Update(product);
+
                 detail.MasterId = purchaseVM.PurchaseMaster.Id;
                 detail.Total = detail.Quantity * detail.Rate;
 
@@ -212,6 +216,19 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Invalid product or insufficient stock.");
                     return View(purchaseVM);
                 }
+
+                //to add previous quantity to stock and decrease new quantity from it
+                var previousDetail = _unitOfWork.PurchaseDetail.Get(a  => a.Id == detail.Id);
+
+                if (previousDetail != null)
+                {
+                    product.Stock1 = product.Stock1 + previousDetail.Quantity;
+                    // Reduce stock
+                    product.Stock1 -= detail.Quantity;
+                    _unitOfWork.Product.Update(product);
+                }
+
+               
 
                 if (detail.ItemId > 0 && detail.Quantity > 0 && detail.Rate > 0)
                 {

@@ -1,4 +1,6 @@
-﻿@model BulkyBook.Models.ViewModels.PurchaseVM
+﻿
+@model BulkyBook.Models.ViewModels.PurchaseVM 
+
 
 <h2>Edit Purchase</h2>
 
@@ -43,9 +45,11 @@
             </tr>
         </thead>
         <tbody id="details-body">
+            
             @for (int i = 0; i < Model.PurchaseDetail.Count; i++)
             {
                 <tr>
+                    <input type="hidden" asp-for="PurchaseDetail[@i].Id" />
                     <td>
                      <select asp-for="PurchaseDetail[@i].ItemId" class="form-control product-dropdown">
                         <option value="">Select Product</option>
@@ -55,22 +59,20 @@
                                     @product.Name
                                 </option>
                             }
-                       </select>
-
-
+                     </select>
                     </td>
                     <td>
-                        <input class="form-control stock" asp-for="PurchaseDetail[0].Stock" readonly />
+                    <input class="form-control stock" asp-for="PurchaseDetail[0].Stock" readonly />
                     </td>
                     <td>
-                        <input asp-for="PurchaseDetail[@i].Rate" class="form-control rate" readonly />
+                    <input asp-for="PurchaseDetail[@i].Rate" class="form-control rate" readonly />
                     </td>
                     <td>
-    <input asp-for="PurchaseDetail[@i].Quantity" class="form-control quantity" />
-</td>
-<td>
-    <input asp-for="PurchaseDetail[@i].Total" class="form-control total" readonly />
-</td>
+                    <input asp-for="PurchaseDetail[@i].Quantity" class="form-control quantity" />
+                    </td>
+                    <td>
+                    <input asp-for="PurchaseDetail[@i].Total" class="form-control total" readonly />
+                    </td>
 
                     <td>
                         <button type="button" class="btn btn-danger remove-row">Remove</button>
@@ -112,29 +114,29 @@
                 $(this).closest("tr").remove();
             });
 
-           // Fetch rate when product is selected
-           $(document).on("change", ".product-dropdown", function () {
+             // Fetch rate when product is selected
+            $(document).on("change", ".product-dropdown", function () {
           // Get the selected option's data-rate attribute
           let rate = $(this).find(":selected").data("rate");
     
           // Update the rate input field
           $(this).closest("tr").find(".rate").val(rate);
 
-                var stock = $(this).find(":selected").data("stock");
-                $(this).closest("tr").find(".stock").val(stock);
+            var stock = $(this).find(":selected").data("stock");
+            $(this).closest("tr").find(".stock").val(stock);
     
           // Calculate and update the total
           let quantity = $(this).closest("tr").find(".quantity").val() || 0;
-    $(this).closest("tr").find(".total").val(rate * quantity);
-});
+           $(this).closest("tr").find(".total").val(rate * quantity);
+        });
 
-// Calculate total when quantity changes
-$(document).on("input", ".quantity", function () {
-    let quantity = parseFloat($(this).val()) || 0;
-    let rate = parseFloat($(this).closest("tr").find(".rate").val()) || 0;
-    let total = quantity * rate;
-    $(this).closest("tr").find(".total").val(total);
-});
+            // Calculate total when quantity changes
+            $(document).on("input", ".quantity", function () {
+            let quantity = parseFloat($(this).val()) || 0;
+            let rate = parseFloat($(this).closest("tr").find(".rate").val()) || 0;
+            let total = quantity * rate;
+            $(this).closest("tr").find(".total").val(total);
+            });
 
         });
     </script>
