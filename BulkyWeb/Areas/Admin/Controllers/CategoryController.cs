@@ -95,6 +95,15 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            //to validate foreign key ( if product exists with this categoryid in product table it shouldn't be deleted)
+            var product = _unitOfWork.Product.GetAll(p => p.CategoryId == id);
+            if (product.Count() > 0)
+            {
+                TempData["success"] = "Cannot be deleted";
+                return RedirectToAction("Index");
+            }
+
             _unitOfWork.Category.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "Category deleted successfully";

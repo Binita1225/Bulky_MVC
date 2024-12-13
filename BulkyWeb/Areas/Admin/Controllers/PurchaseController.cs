@@ -22,8 +22,10 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
         }
 
+       
         public IActionResult Index()
         {
+            
             var purchases = _unitOfWork.PurchaseMaster.GetAll(includeProperties : "PurchaseDetails.Product");
 
             var purchaseIndexVM = new PurchaseIndexVM
@@ -60,6 +62,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
+           // ViewBag.Greeting = "Welcome to Index Page";
+
             var viewModel = new PurchaseVM
             {
                 PurchaseMaster = new PurchaseMaster { TransactionDate = DateTime.Now },
@@ -72,9 +76,6 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     Stock = p.Stock1
                 }).ToList()
             };
-
-         
-
             return View(viewModel);
         }
 
@@ -121,12 +122,11 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     TransactionDate = DateTime.Now
                 };
 
-
-
                 _unitOfWork.History.Add(history);
             }
 
             _unitOfWork.Save();
+            TempData["success"] = "Created successfully";
 
             return RedirectToAction("Index");
         }
@@ -211,11 +211,11 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 var product = _unitOfWork.Product.Get(x => x.Id == detail.ItemId);
 
-                if (product.Stock1 < detail.Quantity)
-                {
-                    ModelState.AddModelError("", "Invalid product or insufficient stock.");
-                    return View(purchaseVM);
-                }
+                //if (product.Stock1 < detail.Quantity)
+                //{
+                //    ModelState.AddModelError("", "Invalid product or insufficient stock.");
+                //    return View(purchaseVM);
+                //}
 
                 //to add previous quantity to stock and decrease new quantity from it
                 var previousDetail = _unitOfWork.PurchaseDetail.Get(a  => a.Id == detail.Id);
@@ -223,12 +223,30 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 if (previousDetail != null)
                 {
                     product.Stock1 = product.Stock1 + previousDetail.Quantity;
-                    // Reduce stock
-                    product.Stock1 -= detail.Quantity;
-                    _unitOfWork.Product.Update(product);
+
+                    if (product.Stock1 < detail.Quantity)
+                    {
+                        ModelState.AddModelError("", "Invalid product or insufficient stock.");
+                        return View(purchaseVM);
+                    }
+                    
+                }
+                else
+                {
+                    if (product.Stock1 < detail.Quantity)
+                    {
+                        return View(purchaseVM);
+                    }
+
+
                 }
 
-               
+                // Reduce stock
+                product.Stock1 -= detail.Quantity;
+                _unitOfWork.Product.Update(product);
+
+                //product.Stock1 -= detail.Quantity;
+                //_unitOfWork.Product.Update(product);
 
                 if (detail.ItemId > 0 && detail.Quantity > 0 && detail.Rate > 0)
                 {
@@ -239,11 +257,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             }
 
             _unitOfWork.Save();
-
+            TempData["success"] = "Purchase Updated";
             return RedirectToAction("Index");
         }
-
-
 
         public IActionResult Delete(int id)
         {
@@ -269,12 +285,15 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             // Remove associated details
             foreach (var detail in purchaseMaster.PurchaseDetails)
             {
+
+
                 _unitOfWork.PurchaseDetail.Remove(detail);
             }
 
             // Remove master
              _unitOfWork.PurchaseMaster.Remove(purchaseMaster);
              _unitOfWork.Save();
+            TempData["success"] = "Deleted Successfully";
 
              return RedirectToAction("Index");
         }
