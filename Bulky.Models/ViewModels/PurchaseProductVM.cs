@@ -13,6 +13,10 @@ namespace BulkyBook.Models.ViewModels
 
         public double Rate { get; set; }
 
+        public double RateUpto50 { get; set; }
+        public double RateAbove50 { get; set; }
+        public double RateAbove100 { get; set; }
+
         public int Stock { get; set; }
     }
 }

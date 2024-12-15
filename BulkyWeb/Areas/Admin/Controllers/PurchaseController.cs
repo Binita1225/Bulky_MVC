@@ -72,7 +72,10 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 {
                     Id = p.Id,
                     Name = p.Title,
-                    Rate = p.ListPrice, 
+                    Rate = p.ListPrice,
+                    RateUpto50 = p.Price,
+                    RateAbove50 = p.Price50,
+                    RateAbove100 = p.Price100,
                     Stock = p.Stock1
                 }).ToList()
             };
@@ -92,6 +95,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 Id = p.Id,
                 Name = p.Title,
                 Rate = p.ListPrice,
+                RateUpto50 = p.Price,
+                RateAbove50 = p.Price50,
+                RateAbove100 = p.Price100,
                 Stock = p.Stock1
             }).ToList();
             foreach (var detail in purchaseVM.PurchaseDetail)
@@ -151,6 +157,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     Id = p.Id,
                     Name = p.Title,
                     Rate = p.ListPrice,
+                    RateUpto50 = p.Price,
+                    RateAbove50 = p.Price50,
+                    RateAbove100 = p.Price100,
                     Stock = p.Stock1
                     // Set data-rate to ListPrice in the SelectListItem Text or Group
                     // We pass rate as a data-attribute directly in the view.
@@ -183,6 +192,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 Id = p.Id,
                 Name = p.Title,
                 Rate = p.ListPrice,
+                RateUpto50 = p.Price,
+                RateAbove50 = p.Price50,
+                RateAbove100 = p.Price100,
                 Stock = p.Stock1
             }).ToList();
 
@@ -285,7 +297,13 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             // Remove associated details
             foreach (var detail in purchaseMaster.PurchaseDetails)
             {
-
+                var product = _unitOfWork.Product.Get(x => x.Id == detail.ItemId);
+                var previousDetail = _unitOfWork.PurchaseDetail.GetAll(a => a.Id == detail.Id);
+                if (product != null) 
+                {
+                    product.Stock1 += detail.Quantity;
+                    _unitOfWork.Product.Update(product);
+                }
 
                 _unitOfWork.PurchaseDetail.Remove(detail);
             }

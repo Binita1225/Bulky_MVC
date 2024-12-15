@@ -39,6 +39,9 @@
                 <th>Product</th>
                 <th>Stock</th>
                 <th>Rate</th>
+                <th>RateUpto50</th>
+                <th>RateAbove50</th>
+                <th>RateAbove100</th>
                 <th>Quantity</th>
                 <th>Total</th>
                 <th>Action</th>
@@ -55,7 +58,12 @@
                         <option value="">Select Product</option>
                             @foreach (var product in Model.Products)
                             {
-                                <option value="@product.Id" data-rate="@product.Rate" data-stock="@product.Stock">
+                                <option value="@product.Id" 
+                                data-rate="@product.Rate"
+                                        data-price="@product.RateUpto50"
+                                        data-above50="@product.RateAbove50"
+                                        data-hundred="@product.RateAbove100"
+                                data-stock="@product.Stock">
                                     @product.Name
                                 </option>
                             }
@@ -66,6 +74,15 @@
                     </td>
                     <td>
                     <input asp-for="PurchaseDetail[@i].Rate" class="form-control rate" readonly />
+                    </td>
+                    <td>
+                        <input asp-for="PurchaseDetail[@i].RateUpto50" class="form-control price" readonly />
+                    </td>
+                    <td>
+                        <input asp-for="PurchaseDetail[@i].RateAbove50" class="form-control above50" readonly />
+                    </td>
+                    <td>
+                        <input asp-for="PurchaseDetail[@i].RateAbove100" class="form-control hundred" readonly />
                     </td>
                     <td>
                     <input asp-for="PurchaseDetail[@i].Quantity" class="form-control quantity" />
@@ -103,6 +120,9 @@
                 row.find("input, select").val(""); // Clear the values
                 row.find("select").attr("name", `PurchaseDetail[${rowCount}].ItemId`);
                 row.find(".rate").attr("name", `PurchaseDetail[${rowCount}].Rate`);
+                row.find(".price").attr("name", `PurchaseDetail[${rowCount}].RateUpto50`);
+                row.find(".above50").attr("name", `PurchaseDetail[${rowCount}].RateAbove50`);
+                row.find(".hundred").attr("name", `PurchaseDetail[${rowCount}].RateAbove100`);
                 row.find(".quantity").attr("name", `PurchaseDetail[${rowCount}].Quantity`);
                 row.find(".total").attr("name", `PurchaseDetail[${rowCount}].Total`);
                 $("#details-body").append(row);
@@ -118,9 +138,14 @@
             $(document).on("change", ".product-dropdown", function () {
           // Get the selected option's data-rate attribute
           let rate = $(this).find(":selected").data("rate");
-    
-          // Update the rate input field
-          $(this).closest("tr").find(".rate").val(rate);
+                let price = $(this).find(":selected").data("price");
+                let above50 = $(this).find(":selected").data("above50");
+                let hundred = $(this).find(":selected").data("hundred");
+                // Update the rate input field
+                $(this).closest("tr").find(".rate").val(rate); 
+                $(this).closest("tr").find(".price").val(price); 
+                $(this).closest("tr").find(".above50").val(above50); 
+                $(this).closest("tr").find(".hundred").val(hundred);
 
             var stock = $(this).find(":selected").data("stock");
             $(this).closest("tr").find(".stock").val(stock);
@@ -133,7 +158,16 @@
             // Calculate total when quantity changes
             $(document).on("input", ".quantity", function () {
             let quantity = parseFloat($(this).val()) || 0;
-            let rate = parseFloat($(this).closest("tr").find(".rate").val()) || 0;
+                var rate = 0;
+                if (quantity < 50) {
+                    rate = parseFloat($(this).closest("tr").find(".rate").val()) || 0;
+                }
+                else if (quantity > 50 && quantity < 100) {
+                    rate = parseFloat($(this).closest("tr").find(".above50").val()) || 0;
+                }
+                else {
+                    rate = parseFloat($(this).closest("tr").find(".hundred").val()) || 0;
+                }
             let total = quantity * rate;
             $(this).closest("tr").find(".total").val(total);
             });

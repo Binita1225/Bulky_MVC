@@ -137,6 +137,14 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            var existingPurchaseDetail = _unitOfWork.PurchaseDetail.Get(e => e.ItemId == id);
+            if(existingPurchaseDetail.Id > 0)
+            {
+                TempData["error"] = "Product cannot be deleted ";
+                return RedirectToAction("Index");
+            }
+
             _unitOfWork.Product.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "Product deleted successfully";
